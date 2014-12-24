@@ -4,6 +4,24 @@ import re
 import json
 from pbkdf2 import crypt
 
+PILIGHT_CONFIG = "/etc/pilight/config.json"
+
+def getConfig(setting):
+# ---------------------------
+   try:
+      prefsFile = open(PILIGHT_CONFIG, 'r')
+      piPrefs = json.loads(prefsFile.read())
+   except:
+      msg = ("\n***  pilight 'configure' file \033[1m'",
+        PILIGHT_CONFIG, "'\033[0m not found! (Check access rights!")
+      print (msg)
+      raise
+
+   if setting != None:
+      return str(piPrefs[setting])
+   else:
+      return piPrefs
+
 def getPrefs():
 
     prefs = {}
@@ -11,16 +29,13 @@ def getPrefs():
     port = ''
     error = ''
 
-    jsonPrefs = '/etc/pilight/config.json'
     try:
-        prefsFile = open(jsonPrefs, 'r')
-        piPrefs = json.loads(prefsFile.read())
+        piPrefs = getConfig(None)
     except:
         print ("\n***  pilight 'prefs' file\n \033[1m'",
-        prefsPrefs, "'\033[0m not found!")
+        PILIGHT_CONFIG, "'\033[0m not found!")
         error = "  'pilight prefs' file not found!"
         return [server, port, error, prefs]
-
 
     jsonPrefs = 'piSchedule.prefs.json'
     try:

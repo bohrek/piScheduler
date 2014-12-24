@@ -22,28 +22,6 @@ port = int(responses[1]['port_pilight'])+1
 address = (server, port)
 
 
-
-def getConfig(setting):
-# ---------------------------
-   jConfig = '/etc/pilight/config.json'
-   
-   try:
-      confFile = open(jConfig, 'r')
-
-   except:
-      msg ("  ***  pilight 'configure' file '", jConfig, 
-        "' not found! (Check access rights!")
-      print (msg)
-      return msg
-
-   configure = json.loads(confFile.read())
-
-   if setting != None: 
-      return str(configure['settings'][setting])
-   else:
-      return configure['settings']
-
-
 def getConn(code):
     global address
 

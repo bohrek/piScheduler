@@ -32,7 +32,7 @@ def getPrefs():
         error = "  'prefs' file not found!"
         return [server, port, error, prefs]
 
-    prefs['port_pilight'] = piPrefs['settings']['webserver-port']
+    prefs['port_pilight'] = piPrefs['webserver-port']
     #print ("\n***  pilight/piScheduler 'prefs' file:  \033[1m", jsonPrefs, "\033[0m")
 
     return (prefs)

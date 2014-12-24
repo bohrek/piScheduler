@@ -83,6 +83,8 @@ prefs = []
 jobs  = []   # store scheduled tasks
 sched = BackgroundScheduler()
 
+PISCHEDULE_PORT = 0
+
 
 def clearTerm():
     if os.name == 'nt':
@@ -95,26 +97,6 @@ def clearTerm():
 def logFile():
     now = datetime.datetime.now()
     return '/home/pi/piScheduler/' + now.strftime("%A") +'.log'
-
-
-def getConfig(setting):
-# ---------------------------
-   jsonPrefs = '/etc/pilight/config.json'
-
-   try:
-      prefsFile = open(jsonPrefs, 'r')
-      piPrefs = json.loads(prefsFile.read())
-   except:
-
-      msg = ("\n***  pilight 'configure' file \033[1m'",
-        jsonPrefs, "'\033[0m not found! (Check access rights!")
-      print (msg)
-      return "No configure file or missing access rights!"
-
-   if setting != None:
-      return str(piPrefs['settings'][setting])
-   else:
-      return piPrefs['settings']
 
 
 def suntime():
@@ -380,8 +362,7 @@ def updateJobsListing():
 
     print(piGet('mainTitle'),  
        str(datetime.datetime.now())[:19], 
-       " (", str(piGet('nextSwitchTime'))[:19] + ")", " " + prefs['server'] + ":" 
-          + str(int(prefs['port_pilight'])+2),
+       " (", str(piGet('nextSwitchTime'))[:19] + ")", " " + prefs['server'] + ":" + str(PISCHEDULE_PORT),
        "\n" + piGet('geo_message'),
        "\n" + "\033[1m  Current Jobs \033[0m" + "    [" + str(piGet('job_file')) + "]    [" + logFile() +"]")
 
@@ -563,12 +544,10 @@ def startup():
    try:
       prefsFile = open(jPrefs, 'r')
       prefs = json.loads(prefsFile.read())
-
    except:
       print (title1, "\n***  pilight/piSchedule 'prefs' file \033[1m'",
         jPrefs, "'\033[0m not found!")
       exit()
-
 
    responses = piDiscover.piDiscover("urn:schemas-upnp-org:service:pilight:1");
    server = responses[0]
@@ -581,6 +560,7 @@ def startup():
        return msg
 
    prefs['port_pilight'] = int(getConfig('webserver-port'))
+   PISCHEDULE_PORT = int(prefs['port_pilight'])+2
 
    next_switchTime()
 
@@ -591,7 +571,7 @@ def startup():
 
    print (piGet('mainTitle'), "  ",
        str(datetime.datetime.now())[:19], "   next: ", str(next)[:19], " " + prefs['server'] 
-         + " " + str(int(prefs['port_pilight'])+2)), "\n", piGet('geo_message')
+         + " " + str(PISCHEDULE_PORT)), "\n", piGet('geo_message')
 
    return None
 
@@ -621,7 +601,7 @@ def main():
     sched.start()  # start the schedule
 
     tJobs = Thread(target=jobs_listing, args=(jobs_event, 'Schedule Listing', calling)).start()
-    tWeb = Thread(target=runWeb, args=(prefs['server'], int(prefs['port_pilight'])+2)).start()
+    tWeb = Thread(target=runWeb, args=(prefs['server'], PISCHEDULE_PORT)).start()
 
     jobs_serve(jobs_event, 'piSchedule')
 

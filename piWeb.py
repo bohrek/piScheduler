@@ -18,8 +18,6 @@ import piDiscover
 responses = piDiscover.piDiscover("urn:schemas-upnp-org:service:pilight:1");
 
 server = responses[0]
-print server
-print responses[1]
 port = int(responses[1]['port_pilight'])+1
 address = (server, port)
 

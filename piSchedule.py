@@ -47,7 +47,6 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import struct
 import re
 
-
 import piDiscover
 import piWeb
 
@@ -559,7 +558,7 @@ def startup():
        msg = title1 + "\n***  pilight/piSchedule server in 'prefs' not found!"
        return msg
 
-   prefs['port_pilight'] = int(getConfig('webserver-port'))
+   prefs['port_pilight'] = int(piDiscover.getConfig('webserver-port'))
    PISCHEDULE_PORT = int(prefs['port_pilight'])+2
 
    next_switchTime()

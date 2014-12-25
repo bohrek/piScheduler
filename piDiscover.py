@@ -4,16 +4,16 @@ import re
 import json
 from pbkdf2 import crypt
 
-PILIGHT_CONFIG = "/etc/pilight/config.json"
+PILIGHT_SETTINGS = "/etc/pilight/settings.json"
 
 def getConfig(setting):
 # ---------------------------
    try:
-      prefsFile = open(PILIGHT_CONFIG, 'r')
+      prefsFile = open(PILIGHT_SETTINGS, 'r')
       piPrefs = json.loads(prefsFile.read())
    except:
       msg = ("\n***  pilight 'configure' file \033[1m'",
-        PILIGHT_CONFIG, "'\033[0m not found! (Check access rights!")
+        PILIGHT_SETTINGS, "'\033[0m not found! (Check access rights!")
       print (msg)
       raise
 
@@ -32,8 +32,6 @@ def getPrefs():
     try:
         piPrefs = getConfig(None)
     except:
-        print ("\n***  pilight 'prefs' file\n \033[1m'",
-        PILIGHT_CONFIG, "'\033[0m not found!")
         error = "  'pilight prefs' file not found!"
         return [server, port, error, prefs]
 
